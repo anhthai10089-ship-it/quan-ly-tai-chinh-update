@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CyberSpend // Ultimate Financial Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #050811;
+            --bg-card: rgba(15, 23, 42, 0.65);
+            --bg-card-hover: rgba(30, 41, 59, 0.8);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --border-glass-hover: rgba(6, 182, 212, 0.3);
+            --primary-glow: #06b6d4; 
+            --success-glow: #10b981; 
+            --danger-glow: #f43f5e;  
+            --warning-glow: #f59e0b; 
+            --info-glow: #3b82f6;    
+            --purple-glow: #a855f7;  
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --radius: 20px;
+            --radius-sm: 12px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Space Grotesk', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 15% 10%, rgba(6, 182, 212, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 90%, rgba(168, 85, 247, 0.1) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
+            color: var(--text-main);
+            padding: 15px 10px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-glass);
+            padding-bottom: 14px;
+            gap: 10px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+            flex: 1;
+        }
+
+        .logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+            border: 1px solid var(--border-glass-hover);
+            display: block;
+            flex-shrink: 0;
+        }
+
+        header h1 {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, var(--primary-glow), var(--info-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px rgba(6, 182, 212, 0.4);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .header-right-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .user-greeting {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--success-glow);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.25));
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            padding: 5px 10px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+            letter-spacing: 0.3px;
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-greeting span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .btn-logout {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--danger-glow);
+            background: rgba(244, 63, 94, 0.1);
+            border: 1px solid rgba(244, 63, 94, 0.25);
+            padding: 5px 8px;
+            border-radius: 30px;
+            cursor: pointer;
+            text-transform: uppercase;
+            flex-shrink: 0;
+        }
+
+        /* Tổng tài sản ròng */
+        .wealth-dashboard {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6));
+            border: 1px solid rgba(6, 182, 212, 0.25);
+            backdrop-filter: blur(20px);
+            padding: 24px 20px;
+            border-radius: var(--radius);
+            box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-main-section {
+            position: relative;
+            z-index: 1;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-title-group h2 {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .balance-title-group h2::before {
+            content: '✨';
+            font-size: 12px;
+        }
+
+        .balance-card #total-balance {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff 30%, var(--primary-glow) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(6, 182, 212, 0.3);
+        }
+
+        .balance-icon-badge {
+            width: 48px;
+            height: 48px;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.15);
+        }
+
+        /* Tổng Thu - Chi */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(12px);
+            padding: 14px;
+            border-radius: var(--radius-sm);
+        }
+
+        .stat-card .label {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .stat-card .amount {
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .stat-card.income .amount { color: var(--success-glow); }
+        .stat-card.expense .amount { color: var(--danger-glow); }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(12px);
+            padding: 14px;
+            border-radius: var(--radius-sm);
+            margin-bottom: 16px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .progress-bar-split {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .progress-income-fill {
+            height: 100%;
+            background: var(--success-glow);
+        }
+
+        .progress-expense-fill {
+            height: 100%;
+            background: var(--danger-glow);
+        }
+
+        .progress-legend {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.income { background: var(--success-glow); }
+        .legend-dot.expense { background: var(--danger-glow); }
+
+        /* Panel Chốt Sổ Cuối Ngày & Tổng Kết Tháng */
+        .closing-panel {
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.08), rgba(168, 85, 247, 0.08));
+            border: 1px solid rgba(6, 182, 212, 0.35);
+            backdrop-filter: blur(16px);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            box-shadow: 0 15px 35px -10px rgba(6, 182, 212, 0.15);
+        }
+
+        .closing-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 10px;
+        }
+
+        .closing-header h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary-glow);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .closing-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .closing-details div {
+            background: rgba(3, 7, 18, 0.65);
+            border: 1px solid var(--border-glass);
+            padding: 12px 10px;
+            border-radius: var(--radius-sm);
+        }
+
+        .closing-details div span {
+            color: var(--text-muted);
+            display: block;
+            font-size: 9px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .closing-details div strong {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .closing-actions {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+        }
+
+        .btn-closing {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--warning-glow), #d97706);
+            color: #000;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .btn-history-toggle {
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glass);
+            color: #fff;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Form Nhập Giao Dịch */
+        .transaction-input-panel {
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6)) !important;
+            border: 1px solid rgba(6, 182, 212, 0.3) !important;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px -10px rgba(6, 182, 212, 0.15) !important;
+        }
+
+        .transaction-input-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-glow), var(--purple-glow));
+        }
+
+        .panel-header-custom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 12px;
+        }
+
+        .header-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-icon-glow {
+            width: 34px;
+            height: 34px;
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        .panel-header-custom h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px !important;
+        }
+
+        .panel-subtitle {
+            font-size: 9px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .form-grid-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 10px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-glow-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            font-size: 14px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .currency-symbol {
+            font-weight: 700;
+            color: var(--primary-glow);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(3, 7, 18, 0.75);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            color: #fff;
+            transition: all 0.25s ease;
+        }
+
+        .input-glow-wrapper .form-control {
+            padding-left: 38px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            background: rgba(3, 7, 18, 0.95);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+        }
+
+        .option-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .select-card {
+            background: rgba(3, 7, 18, 0.6);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            padding: 12px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .select-card:hover {
+            background: rgba(30, 41, 59, 0.6);
+            border-color: rgba(6, 182, 212, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .select-card .card-icon {
+            font-size: 18px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .select-card .card-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .select-card .card-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .select-card .card-desc {
+            font-size: 8px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .select-card.active[data-type="income"] {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: var(--success-glow);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.25);
+        }
+        .select-card.active[data-type="income"] .card-icon {
+            background: rgba(16, 185, 129, 0.2);
+        }
+        .select-card.active[data-type="income"] .card-title {
+            color: var(--success-glow);
+        }
+
+        .select-card.active[data-type="expense"] {
+            background: rgba(244, 63, 94, 0.12);
+            border-color: var(--danger-glow);
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.25);
+        }
+        .select-card.active[data-type="expense"] .card-icon {
+            background: rgba(244, 63, 94, 0.2);
+        }
+        .select-card.active[data-type="expense"] .card-title {
+            color: var(--danger-glow);
+        }
+
+        .btn-action-glow {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, var(--primary-glow), #0284c7);
+            color: #000;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 5px 20px rgba(6, 182, 212, 0.3);
+            transition: all 0.25s ease;
+        }
+
+        .btn-action-glow:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(6, 182, 212, 0.5);
+            filter: brightness(1.1);
+        }
+
+        /* Modal & Các thành phần khác */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 7, 18, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 9999; opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content {
+            background: #0f172a; border: 1px solid rgba(6, 182, 212, 0.35);
+            width: 92%; max-width: 500px; border-radius: var(--radius);
+            padding: 18px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            max-height: 80vh; display: flex; flex-direction: column;
+        }
+        .alert-modal-box {
+            background: #0f172a; border: 1px solid var(--border-glass);
+            width: 88%; max-width: 380px; border-radius: var(--radius);
+            padding: 24px 20px; text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+            transform: scale(0.9); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .modal-overlay.active .alert-modal-box { transform: scale(1); }
+        .alert-icon { font-size: 36px; margin-bottom: 10px; }
+        .alert-title { font-size: 15px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 12px; border-bottom: 1px solid var(--border-glass); padding-bottom: 10px;
+        }
+        .modal-header h3 { font-size: 13px; font-weight: 700; color: var(--primary-glow); text-transform: uppercase; }
+        .close-modal {
+            background: rgba(255, 255, 255, 0.05); border: none; color: var(--text-muted);
+            font-size: 16px; cursor: pointer; width: 26px; height: 26px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #history-list, #month-history-list { list-style: none; overflow-y: auto; max-height: 50vh; }
+        .history-item {
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-glass);
+            padding: 12px; border-radius: var(--radius-sm); margin-bottom: 8px;
+        }
+        .history-item-header {
+            display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; margin-bottom: 6px; color: #fff;
+        }
+        .history-item-details { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 10px; }
+        .goals-container { margin-bottom: 12px; }
+        .goal-card {
+            background: rgba(3, 7, 18, 0.6); border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm); padding: 12px; margin-bottom: 10px;
+        }
+        .goal-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .goal-title { font-size: 12px; font-weight: 600; color: #fff; }
+        .goal-numbers { font-size: 10px; color: var(--text-muted); }
+        .goal-numbers strong { color: var(--info-glow); }
+        .goal-progress-bar {
+            width: 100%; height: 6px; background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px; overflow: hidden; margin-bottom: 10px;
+        }
+        .goal-progress-fill { height: 100%; background: var(--info-glow); transition: width 0.5s ease; }
+        .goal-actions { display: flex; gap: 6px; }
+        .goal-actions input {
+            flex: 1; padding: 7px 10px; background: rgba(3, 7, 18, 0.8);
+            border: 1px solid var(--border-glass); border-radius: 8px; font-size: 11px; color: #fff;
+        }
+        .btn-add-fund {
+            padding: 7px 12px; background: var(--info-glow); color: #000;
+            border: none; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;
+        }
+        .panel {
+            background: var(--bg-card); border: 1px solid var(--border-glass);
+            backdrop-filter: blur(12px); padding: 18px; border-radius: var(--radius);
+            margin-bottom: 16px; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+        .panel h3 { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--text-main); text-transform: uppercase; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .filter-group {
+            display: flex; gap: 4px; background: rgba(3, 7, 18, 0.7);
+            padding: 3px; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);
+        }
+        .filter-btn {
+            background: transparent; border: none; padding: 5px 10px; border-radius: 6px;
+            font-size: 9px; font-weight: 700; color: var(--text-muted); cursor: pointer; text-transform: uppercase;
+        }
+        .filter-btn.active { background: var(--primary-glow); color: #000; }
+        #transaction-list { list-style: none; max-height: 250px; overflow-y: auto; }
+        .transaction-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px 12px; margin-bottom: 8px; border-radius: var(--radius-sm);
+            background: rgba(3, 7, 18, 0.5); border: 1px solid var(--border-glass);
+        }
+        .t-info { display: flex; flex-direction: column; gap: 3px; }
+        .t-desc { font-weight: 600; font-size: 12px; color: #fff; }
+        .t-meta { font-size: 9px; color: var(--text-muted); display: flex; gap: 6px; align-items: center; }
+        .t-right { display: flex; align-items: center; gap: 10px; }
+        .t-amount { font-weight: 700; font-size: 13px; }
+        .transaction-item.income .t-amount { color: var(--success-glow); }
+        .transaction-item.expense .t-amount { color: var(--danger-glow); }
+        .delete-btn {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-glass);
+            color: var(--text-muted); cursor: pointer; font-size: 13px; display: flex;
+            align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 6px;
+        }
+        .empty-state { text-align: center; color: var(--text-muted); font-size: 11px; padding: 20px 0; font-style: italic; }
+
+        /* Auth Container (Tách riêng trang đăng nhập / đăng ký và màn hình bắt đầu) */
+        .auth-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-deep);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 99999;
+            padding: 15px;
+        }
+        .auth-card-box {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(6, 182, 212, 0.35);
+            width: 100%; max-width: 400px;
+            border-radius: var(--radius);
+            padding: 24px 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(16px);
+        }
+
+        .auth-views {
+            display: none;
+        }
+        .auth-views.active {
+            display: block;
+        }
+
+        /* Toast thông báo ở giữa màn hình */
+        .center-toast {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.8);
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid var(--primary-glow);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 25px rgba(6, 182, 212, 0.3);
+            padding: 20px 30px;
+            border-radius: var(--radius);
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .center-toast.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
+        }
+        .center-toast-icon {
+            font-size: 32px;
+        }
+        .center-toast-message {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- MÀN HÌNH ĐĂNG NHẬP / ĐĂNG KÝ RIÊNG BIỆT -->
+    <div class="auth-screen" id="auth-screen">
+        <div class="auth-card-box">
+            
+            <!-- 1. Giao diện Đăng nhập -->
+            <div id="login-view" class="auth-views active">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="alert-icon">🔐</div>
+                    <div class="alert-title" style="color: var(--primary-glow);">Đăng Nhập Tài Khoản</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">Nhập thông tin để bắt đầu sử dụng</div>
+                </div>
+
+                <form onsubmit="handleLoginSubmit(event)">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label for="login-username">Tên tài khoản</label>
+                        <input type="text" id="login-username" class="form-control" placeholder="Nhập username..." required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="login-password">Mật khẩu</label>
+                        <input type="password" id="login-password" class="form-control" placeholder="Nhập mật khẩu..." required>
+                    </div>
+                    <button type="submit" class="btn-action-glow" style="margin-bottom: 12px;">Bắt đầu (Đăng Nhập)</button>
+                </form>
+
+                <div style="text-align: center; font-size: 11px; color: var(--text-muted);">
+                    Chưa có tài khoản? <a href="javascript:void(0)" onclick="switchAuthScreen('register')" style="color: var(--primary-glow); font-weight: 700; text-decoration: none;">Đăng ký ngay</a>
+                </div>
+            </div>
+
+            <!-- 2. Giao diện Đăng ký riêng biệt -->
+            <div id="register-view" class="auth-views">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="alert-icon">✨</div>
+                    <div class="alert-title" style="color: var(--primary-glow);">Đăng Ký Tài Khoản Mới</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">Tạo tài khoản mới để bắt đầu trải nghiệm</div>
+                </div>
+
+                <form onsubmit="handleRegisterSubmit(event)">
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label for="register-username">Tên tài khoản</label>
+                        <input type="text" id="register-username" class="form-control" placeholder="Chọn username..." required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label for="register-password">Mật khẩu</label>
+                        <input type="password" id="register-password" class="form-control" placeholder="Chọn mật khẩu..." required>
+                    </div>
+                    <button type="submit" class="btn-action-glow" style="margin-bottom: 12px;">Đăng Ký Tài Khoản</button>
+                </form>
+
+                <div style="text-align: center; font-size: 11px; color: var(--text-muted);">
+                    Đã có tài khoản? <a href="javascript:void(0)" onclick="switchAuthScreen('login')" style="color: var(--primary-glow); font-weight: 700; text-decoration: none;">Đăng nhập</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container" id="main-app-container" style="display: none;">
+        <!-- Header -->
+        <header>
+            <div class="logo-area">
+                <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100&auto=format&fit=crop&q=80" alt="My Logo" class="logo-img">
+                <h1 id="app-title">CyberSpend AI</h1>
+            </div>
+            <div class="header-right-group" id="header-right-group">
+                <!-- Đã đổi màu chữ user thành xanh lá cây và tối ưu chống tràn -->
+                <div class="user-greeting" id="user-greeting-text" style="color: var(--success-glow); font-weight: 700;">user: <span style="color: var(--success-glow);"></span></div>
+                <button class="btn-logout" id="logout-btn" onclick="logout()">Đăng xuất</button>
+            </div>
+        </header>
+
+        <!-- KHU VỰC TÀI SẢN RÒNG -->
+        <div class="wealth-dashboard">
+            <div class="balance-main-section">
+                <div class="balance-title-group balance-card">
+                    <h2>Tổng tài sản ròng</h2>
+                    <div id="total-balance">0 đ</div>
+                </div>
+                <div class="balance-icon-badge">💎</div>
+            </div>
+        </div>
+
+        <!-- Tổng Thu - Chi -->
+        <div class="stats-grid">
+            <div class="stat-card income">
+                <div class="label">Tổng Thu Lũy Kế</div>
+                <div class="amount" id="total-income">0 đ</div>
+            </div>
+            <div class="stat-card expense">
+                <div class="label">Tổng Chi Lũy Kế</div>
+                <div class="amount" id="total-expense">0 đ</div>
+            </div>
+        </div>
+
+        <!-- Phân bổ Thu & Chi -->
+        <div class="progress-container">
+            <div class="progress-info">
+                <span>Phân bổ dòng tiền</span>
+                <span id="balance-ratio-text">Thu: 0% | Chi: 0%</span>
+            </div>
+            <div class="progress-bar-split">
+                <div class="progress-income-fill" id="progress-income-fill" style="width: 0%;"></div>
+                <div class="progress-expense-fill" id="progress-expense-fill" style="width: 0%;"></div>
+            </div>
+            <div class="progress-legend">
+                <div class="legend-item"><span class="legend-dot income"></span> Thu nhập</div>
+                <div class="legend-item"><span class="legend-dot expense"></span> Chi tiêu</div>
+            </div>
+        </div>
+
+        <!-- Panel Chốt Sổ Cuối Ngày -->
+        <div class="closing-panel">
+            <div class="closing-header">
+                <h3>🔒 Bảng Chốt Sổ Cuối Ngày</h3>
+                <span id="current-date-label" style="font-size: 10px; color: var(--text-muted); font-weight: 600;">--/--/----</span>
+            </div>
+            <div class="closing-details">
+                <div><span>Thu trong ngày</span><strong id="day-income" style="color: var(--success-glow);">0 đ</strong></div>
+                <div><span>Chi trong ngày</span><strong id="day-expense" style="color: var(--danger-glow);">0 đ</strong></div>
+            </div>
+            <div class="closing-actions">
+                <button class="btn-closing" onclick="dailyClosing()">⚡ Xác nhận chốt sổ</button>
+                <button class="btn-history-toggle" onclick="toggleHistoryModal(true)">📂 Lịch sử ngày</button>
+            </div>
+        </div>
+
+        <!-- Panel Tổng Kết Tháng -->
+        <div class="closing-panel" style="background: linear-gradient(135deg, rgba(168, 85, 247, 0.08), rgba(59, 130, 246, 0.08)); border-color: rgba(168, 85, 247, 0.35);">
+            <div class="closing-header">
+                <h3 style="color: var(--purple-glow);">📊 Tổng Kết Tháng Này</h3>
+                <span id="current-month-label" style="font-size: 10px; color: var(--text-muted); font-weight: 600;">Tháng --/----</span>
+            </div>
+            <div class="closing-details" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 12px;">
+                <div><span>Tổng thu tháng</span><strong id="month-income" style="color: var(--success-glow);">0 đ</strong></div>
+                <div><span>Tổng chi tháng</span><strong id="month-expense" style="color: var(--danger-glow);">0 đ</strong></div>
+            </div>
+            <button class="btn-history-toggle" style="width: 100%; justify-content: center; background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.4); color: var(--purple-glow);" onclick="toggleMonthHistoryModal(true)">📂 Xem lịch sử tổng kết các tháng</button>
+        </div>
+
+        <!-- Mục Tiêu Tiết Kiệm -->
+        <div class="panel">
+            <h3>🎯 Mục Tiêu Tiết Kiệm</h3>
+            <div class="goals-container" id="goals-list"></div>
+            <form id="goal-form" style="display: flex; gap: 6px;">
+                <input type="text" id="goal-name" class="form-control" placeholder="Tên mục tiêu" required style="flex: 2;">
+                <input type="text" inputmode="numeric" pattern="[0-9]*" id="goal-target" class="form-control" placeholder="Số tiền" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required style="flex: 1.5;">
+                <button type="submit" class="btn-action-glow" style="flex: 1; padding: 8px; font-size: 10px;">Thêm</button>
+            </form>
+        </div>
+
+        <!-- FORM NHẬP GIAO DỊCH -->
+        <div class="panel transaction-input-panel">
+            <div class="panel-header-custom">
+                <div class="header-title-wrapper">
+                    <div class="panel-icon-glow">➕</div>
+                    <div>
+                        <h3>Thêm Giao Dịch Mới</h3>
+                        <span class="panel-subtitle">Ghi nhận dòng tiền thực tế</span>
+                    </div>
+                </div>
+            </div>
+
+            <form id="transaction-form">
+                <div class="form-grid-layout">
+                    <!-- Mô tả giao dịch -->
+                    <div class="form-group">
+                        <label for="description">Mô tả giao dịch</label>
+                        <div class="input-glow-wrapper">
+                            <span class="input-icon">✏️</span>
+                            <input type="text" id="description" class="form-control" placeholder="Ví dụ: Lương tháng, Ăn trưa..." required>
+                        </div>
+                    </div>
+
+                    <!-- Số tiền -->
+                    <div class="form-group">
+                        <label for="amount">Số tiền (VNĐ)</label>
+                        <div class="input-glow-wrapper">
+                            <span class="input-icon currency-symbol">₫</span>
+                            <input type="text" inputmode="numeric" pattern="[0-9]*" id="amount" class="form-control" placeholder="0" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
+                        </div>
+                    </div>
+
+                    <!-- LOẠI GIAO DỊCH -->
+                    <div class="form-group">
+                        <label>Loại giao dịch</label>
+                        <div class="option-cards-grid" id="type-cards-group">
+                            <div class="select-card" data-type="income" onclick="selectTransactionType('income')">
+                                <div class="card-icon">📈</div>
+                                <div class="card-info">
+                                    <span class="card-title">Thu nhập</span>
+                                    <span class="card-desc">Cộng tiền (+)</span>
+                                </div>
+                            </div>
+                            <div class="select-card" data-type="expense" onclick="selectTransactionType('expense')">
+                                <div class="card-icon">📉</div>
+                                <div class="card-info">
+                                    <span class="card-title">Chi tiêu</span>
+                                    <span class="card-desc">Trừ tiền (-)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="type" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-action-glow">
+                    <span>Xác Nhận Thêm Giao Dịch</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+            </form>
+        </div>
+
+        <!-- Lịch sử giao dịch -->
+        <div class="panel">
+            <div class="history-header">
+                <h3 style="margin-bottom: 0;">📜 Nhật Ký</h3>
+                <div class="filter-group">
+                    <button class="filter-btn active" onclick="setFilter('all', event)">Tất cả</button>
+                    <button class="filter-btn" onclick="setFilter('income', event)">Thu</button>
+                    <button class="filter-btn" onclick="setFilter('expense', event)">Chi</button>
+                </div>
+            </div>
+            <ul id="transaction-list" style="margin-top: 10px;"></ul>
+        </div>
+    </div>
+
+    <!-- Modal Lịch Sử Ngày -->
+    <div class="modal-overlay" id="history-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📂 Lịch Sử Chốt Sổ Cuối Ngày</h3>
+                <button class="close-modal" onclick="toggleHistoryModal(false)">&times;</button>
+            </div>
+            <ul id="history-list"></ul>
+        </div>
+    </div>
+
+    <!-- Modal Lịch Sử Tháng -->
+    <div class="modal-overlay" id="month-history-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📂 Lịch Sử Tổng Kết Các Tháng</h3>
+                <button class="close-modal" onclick="toggleMonthHistoryModal(false)">&times;</button>
+            </div>
+            <ul id="month-history-list"></ul>
+        </div>
+    </div>
+
+    <!-- Toast thông báo ở giữa màn hình -->
+    <div class="center-toast" id="center-toast">
+        <div class="center-toast-icon" id="center-toast-icon">✨</div>
+        <div class="center-toast-message" id="center-toast-msg">Thông báo</div>
+    </div>
+
+    <script>
+        let currentUser = localStorage.getItem('current_logged_user_v21') || null;
+
+        let transactions = [];
+        let closingHistory = [];
+        let manualMonthClosings = [];
+        let savingsGoals = [];
+        let currentFilter = 'all';
+
+        const form = document.getElementById('transaction-form');
+        const descriptionInput = document.getElementById('description');
+        const amountInput = document.getElementById('amount');
+        const typeInput = document.getElementById('type');
+        
+        const goalForm = document.getElementById('goal-form');
+        const goalNameInput = document.getElementById('goal-name');
+        const goalTargetInput = document.getElementById('goal-target');
+        const goalsListEl = document.getElementById('goals-list');
+
+        const balanceEl = document.getElementById('total-balance');
+        const incomeEl = document.getElementById('total-income');
+        const expenseEl = document.getElementById('total-expense');
+        const listEl = document.getElementById('transaction-list');
+        
+        const progressIncomeFill = document.getElementById('progress-income-fill');
+        const progressExpenseFill = document.getElementById('progress-expense-fill');
+        const balanceRatioText = document.getElementById('balance-ratio-text');
+
+        const dayIncomeEl = document.getElementById('day-income');
+        const dayExpenseEl = document.getElementById('day-expense');
+        const currentDateLabel = document.getElementById('current-date-label');
+
+        const currentMonthLabel = document.getElementById('current-month-label');
+        const monthIncomeEl = document.getElementById('month-income');
+        const monthExpenseEl = document.getElementById('month-expense');
+        
+        const historyModal = document.getElementById('history-modal');
+        const historyListEl = document.getElementById('history-list');
+
+        const monthHistoryModal = document.getElementById('month-history-modal');
+        const monthHistoryListEl = document.getElementById('month-history-list');
+
+        const authScreen = document.getElementById('auth-screen');
+        const mainAppContainer = document.getElementById('main-app-container');
+        const userGreetingSpan = document.querySelector('#user-greeting-text span');
+
+        const centerToast = document.getElementById('center-toast');
+        const centerToastMsg = document.getElementById('center-toast-msg');
+        const centerToastIcon = document.getElementById('center-toast-icon');
+
+        let toastTimeout = null;
+
+        function showCenterToast(message, type = 'success') {
+            if (toastTimeout) clearTimeout(toastTimeout);
+
+            centerToastMsg.innerText = message;
+            if (type === 'success') {
+                centerToastIcon.innerText = '🎉';
+                centerToast.style.borderColor = 'var(--success-glow)';
+            } else if (type === 'error') {
+                centerToastIcon.innerText = '⚠️';
+                centerToast.style.borderColor = 'var(--danger-glow)';
+            } else {
+                centerToastIcon.innerText = '✨';
+                centerToast.style.borderColor = 'var(--primary-glow)';
+            }
+
+            centerToast.classList.add('show');
+
+            toastTimeout = setTimeout(() => {
+                centerToast.classList.remove('show');
+            }, 2000);
+        }
+
+        function switchAuthScreen(mode) {
+            const loginView = document.getElementById('login-view');
+            const registerView = document.getElementById('register-view');
+            if (mode === 'register') {
+                loginView.classList.remove('active');
+                registerView.classList.add('active');
+            } else {
+                registerView.classList.remove('active');
+                loginView.classList.add('active');
+            }
+        }
+
+        function handleLoginSubmit(e) {
+            e.preventDefault();
+            const user = document.getElementById('login-username').value.trim();
+            const pass = document.getElementById('login-password').value.trim();
+
+            if (!user || !pass) return;
+
+            let usersDb = JSON.parse(localStorage.getItem('cyberspend_users_db')) || {};
+
+            if (!usersDb[user] || usersDb[user].password !== pass) {
+                showCenterToast('Sai tài khoản hoặc mật khẩu!', 'error');
+                return;
+            }
+
+            currentUser = user;
+            localStorage.setItem('current_logged_user_v21', currentUser);
+            
+            showCenterToast('Đăng nhập thành công!', 'success');
+            setTimeout(() => {
+                authScreen.style.display = 'none';
+                mainAppContainer.style.display = 'block';
+                loadUserData();
+                updateApp();
+            }, 500);
+        }
+
+        function handleRegisterSubmit(e) {
+            e.preventDefault();
+            const user = document.getElementById('register-username').value.trim();
+            const pass = document.getElementById('register-password').value.trim();
+
+            if (!user || !pass) return;
+
+            let usersDb = JSON.parse(localStorage.getItem('cyberspend_users_db')) || {};
+
+            if (usersDb[user]) {
+                showCenterToast('Tên tài khoản đã tồn tại!', 'error');
+                return;
+            }
+
+            usersDb[user] = { password: pass };
+            localStorage.setItem('cyberspend_users_db', JSON.stringify(usersDb));
+            
+            showCenterToast('Đăng ký thành công! Vui lòng đăng nhập.', 'success');
+
+            setTimeout(() => {
+                switchAuthScreen('login');
+                document.getElementById('login-username').value = user;
+                document.getElementById('login-password').value = '';
+                document.getElementById('login-password').focus();
+            }, 800);
+        }
+
+        function logout() {
+            localStorage.removeItem('current_logged_user_v21');
+            currentUser = null;
+            mainAppContainer.style.display = 'none';
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
+            switchAuthScreen('login');
+            authScreen.style.display = 'flex';
+            showCenterToast('Đã đăng xuất', 'info');
+        }
+
+        function loadUserData() {
+            if (!currentUser) return;
+            userGreetingSpan.innerText = currentUser;
+
+            transactions = JSON.parse(localStorage.getItem(`transactions_ultimate_${currentUser}`)) || [];
+            closingHistory = JSON.parse(localStorage.getItem(`closing_history_${currentUser}`)) || [];
+            manualMonthClosings = JSON.parse(localStorage.getItem(`manual_month_closings_${currentUser}`)) || [];
+            savingsGoals = JSON.parse(localStorage.getItem(`savings_goals_${currentUser}`)) || [];
+        }
+
+        function saveUserData() {
+            if (!currentUser) return;
+            localStorage.setItem(`transactions_ultimate_${currentUser}`, JSON.stringify(transactions));
+            localStorage.setItem(`closing_history_${currentUser}`, JSON.stringify(closingHistory));
+            localStorage.setItem(`manual_month_closings_${currentUser}`, JSON.stringify(manualMonthClosings));
+            localStorage.setItem(`savings_goals_${currentUser}`, JSON.stringify(savingsGoals));
+        }
+
+        function selectTransactionType(type) {
+            typeInput.value = type;
+            document.querySelectorAll('#type-cards-group .select-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            const selectedCard = document.querySelector(`#type-cards-group .select-card[data-type="${type}"]`);
+            if (selectedCard) selectedCard.classList.add('active');
+        }
+
+        const todayStr = new Date().toLocaleDateString('vi-VN');
+        currentDateLabel.innerText = `Ngày: ${todayStr}`;
+
+        function formatCurrency(number) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number);
+        }
+
+        function setFilter(filter, event) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            updateApp();
+        }
+
+        function toggleHistoryModal(isOpen) {
+            if (isOpen) {
+                renderHistoryLogs();
+                historyModal.classList.add('active');
+            } else {
+                historyModal.classList.remove('active');
+            }
+        }
+
+        function toggleMonthHistoryModal(isOpen) {
+            if (isOpen) {
+                renderMonthHistoryLogs();
+                monthHistoryModal.classList.add('active');
+            } else {
+                monthHistoryModal.classList.remove('active');
+            }
+        }
+
+        function renderHistoryLogs() {
+            historyListEl.innerHTML = '';
+            if (closingHistory.length === 0) {
+                historyListEl.innerHTML = `<li class="empty-state">Chưa có lịch sử chốt sổ ngày.</li>`;
+                return;
+            }
+
+            closingHistory.forEach(record => {
+                const li = document.createElement('li');
+                li.classList.add('history-item');
+                li.innerHTML = `
+                    <div class="history-item-header">
+                        <span>📅 ${record.date}</span>
+                        <span style="font-size: 9px; color: var(--text-muted);">${record.closedAt}</span>
+                    </div>
+                    <div class="history-item-details">
+                        <span style="color: var(--success-glow);">Thu: +${formatCurrency(record.income)}</span>
+                        <span style="color: var(--danger-glow);">Chi: -${formatCurrency(record.expense)}</span>
+                    </div>
+                `;
+                historyListEl.appendChild(li);
+            });
+        }
+
+        function renderMonthHistoryLogs() {
+            monthHistoryListEl.innerHTML = '';
+            
+            let aggregatedMonths = {};
+
+            manualMonthClosings.forEach(mc => {
+                if (!aggregatedMonths[mc.monthYear]) {
+                    aggregatedMonths[mc.monthYear] = { income: 0, expense: 0 };
+                }
+                aggregatedMonths[mc.monthYear].income += mc.income;
+                aggregatedMonths[mc.monthYear].expense += mc.expense;
+            });
+
+            const monthKeys = Object.keys(aggregatedMonths).sort((a, b) => {
+                const [m1, y1] = a.split('/');
+                const [m2, y2] = b.split('/');
+                return new Date(y2, m2 - 1) - new Date(y1, m1 - 1);
+            });
+
+            if (monthKeys.length === 0) {
+                monthHistoryListEl.innerHTML = `<li class="empty-state">Chưa có dữ liệu tổng kết các tháng.</li>`;
+                return;
+            }
+
+            monthKeys.forEach(mYear => {
+                const data = aggregatedMonths[mYear];
+                const li = document.createElement('li');
+                li.classList.add('history-item');
+                li.innerHTML = `
+                    <div class="history-item-header">
+                        <span style="color: var(--purple-glow);">📊 Tháng ${mYear}</span>
+                    </div>
+                    <div class="history-item-details">
+                        <span style="color: var(--success-glow);">Tổng thu: +${formatCurrency(data.income)}</span>
+                        <span style="color: var(--danger-glow);">Tổng chi: -${formatCurrency(data.expense)}</span>
+                    </div>
+                `;
+                monthHistoryListEl.appendChild(li);
+            });
+        }
+
+        function renderGoals() {
+            savingsGoals = savingsGoals.filter(goal => goal.current < goal.target);
+            goalsListEl.innerHTML = '';
+            if (savingsGoals.length === 0) {
+                goalsListEl.innerHTML = `<div class="empty-state" style="padding: 6px 0;">Chưa có mục tiêu tiết kiệm.</div>`;
+                return;
+            }
+
+            savingsGoals.forEach((goal, index) => {
+                const percent = Math.min(Math.round((goal.current / goal.target) * 100), 100);
+                const div = document.createElement('div');
+                div.classList.add('goal-card');
+                div.innerHTML = `
+                    <div class="goal-info">
+                        <span class="goal-title">🎯 ${goal.name}</span>
+                        <div class="goal-numbers">
+                            <strong>${formatCurrency(goal.current)}</strong> / ${formatCurrency(goal.target)} (${percent}%)
+                        </div>
+                    </div>
+                    <div class="goal-progress-bar">
+                        <div class="goal-progress-fill" style="width: ${percent}%;"></div>
+                    </div>
+                    <div class="goal-actions">
+                        <input type="text" inputmode="numeric" pattern="[0-9]*" id="goal-add-${index}" placeholder="Nạp thêm..." oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                        <button class="btn-add-fund" onclick="addGoalFund(${index})">Nạp</button>
+                    </div>
+                `;
+                goalsListEl.appendChild(div);
+            });
+        }
+
+        function addGoalFund(index) {
+            const input = document.getElementById(`goal-add-${index}`);
+            const amount = parseFloat(input.value);
+            if (isNaN(amount) || amount <= 0) return;
+            savingsGoals[index].current += amount;
+
+            const now = new Date();
+            const dateStr = `${now.toLocaleDateString('vi-VN')} ${now.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}`;
+            
+            transactions.unshift({
+                description: `Nạp mục tiêu: ${savingsGoals[index].name}`,
+                amount: amount,
+                type: 'expense',
+                date: dateStr,
+                rawDate: todayStr
+            });
+
+            input.value = '';
+            updateApp();
+            showCenterToast('Đã nạp quỹ thành công!', 'success');
+        }
+
+        goalForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = goalNameInput.value.trim();
+            const target = parseFloat(goalTargetInput.value);
+            if (!name || isNaN(target) || target <= 0) return;
+
+            savingsGoals.push({ name, target, current: 0 });
+            goalNameInput.value = '';
+            goalTargetInput.value = '';
+            updateApp();
+            showCenterToast('Đã thêm mục tiêu!', 'success');
+        });
+
+        function updateApp() {
+            if (!currentUser) return;
+            listEl.innerHTML = '';
+            
+            let totalIncome = 0;
+            let totalExpense = 0;
+
+            let dayIncome = 0;
+            let dayExpense = 0;
+
+            const nowObj = new Date();
+            const currentMonth = String(nowObj.getMonth() + 1).padStart(2, '0');
+            const currentYear = nowObj.getFullYear();
+            const currentMonthYearStr = `${currentMonth}/${currentYear}`;
+            currentMonthLabel.innerText = `Tháng ${currentMonthYearStr}`;
+
+            let monthIncome = 0;
+            let monthExpense = 0;
+
+            transactions.forEach(t => {
+                const amount = Number(t.amount);
+                
+                if (t.type === 'income') {
+                    totalIncome += amount;
+                    if (t.rawDate === todayStr) dayIncome += amount;
+                } else if (t.type === 'expense') {
+                    totalExpense += amount;
+                    if (t.rawDate === todayStr) dayExpense += amount;
+                }
+
+                if (t.rawDate) {
+                    const parts = t.rawDate.split('/');
+                    if (parts.length === 3) {
+                        const tMonthYear = `${parts[1]}/${parts[2]}`;
+                        if (tMonthYear === currentMonthYearStr) {
+                            if (t.type === 'income') monthIncome += amount;
+                            else if (t.type === 'expense') monthExpense += amount;
+                        }
+                    }
+                }
+            });
+
+            manualMonthClosings.forEach(mc => {
+                if (mc.monthYear === currentMonthYearStr) {
+                    monthIncome += mc.income;
+                    monthExpense += mc.expense;
+                }
+            });
+
+            const filteredTransactions = transactions.filter(t => {
+                if (currentFilter === 'income') return t.type === 'income';
+                if (currentFilter === 'expense') return t.type === 'expense';
+                return true;
+            });
+
+            if (filteredTransactions.length === 0) {
+                listEl.innerHTML = `<li class="empty-state">Chưa có giao dịch nào.</li>`;
+            }
+
+            filteredTransactions.forEach((t) => {
+                const originalIndex = transactions.indexOf(t);
+                const amount = Number(t.amount);
+                
+                let sign = '+';
+                if (t.type === 'expense') sign = '-';
+
+                const li = document.createElement('li');
+                li.classList.add('transaction-item', t.type);
+                li.innerHTML = `
+                    <div class="t-info">
+                        <span class="t-desc">${t.description}</span>
+                        <div class="t-meta">
+                            <span>${t.date}</span>
+                        </div>
+                    </div>
+                    <div class="t-right">
+                        <span class="t-amount">${sign}${formatCurrency(amount)}</span>
+                        <button class="delete-btn" onclick="removeTransaction(${originalIndex})">&times;</button>
+                    </div>
+                `;
+                listEl.appendChild(li);
+            });
+
+            const totalBalance = totalIncome - totalExpense;
+
+            balanceEl.innerText = formatCurrency(totalBalance);
+            incomeEl.innerText = formatCurrency(totalIncome);
+            expenseEl.innerText = formatCurrency(totalExpense);
+
+            dayIncomeEl.innerText = formatCurrency(dayIncome);
+            dayExpenseEl.innerText = formatCurrency(dayExpense);
+
+            monthIncomeEl.innerText = formatCurrency(monthIncome);
+            monthExpenseEl.innerText = formatCurrency(monthExpense);
+
+            let sumTotal = totalIncome + totalExpense;
+            let incomePercent = 0;
+            let expensePercent = 0;
+
+            if (sumTotal > 0) {
+                incomePercent = Math.round((totalIncome / sumTotal) * 100);
+                expensePercent = 100 - incomePercent; 
+            }
+
+            progressIncomeFill.style.width = incomePercent + '%';
+            progressExpenseFill.style.width = expensePercent + '%';
+            balanceRatioText.innerText = `Thu: ${incomePercent}% | Chi: ${expensePercent}%`;
+
+            renderGoals();
+            saveUserData();
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const description = descriptionInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+            const type = typeInput.value;
+
+            if (!description || isNaN(amount) || amount <= 0 || !type) {
+                showCenterToast('Vui lòng điền đủ thông tin!', 'error');
+                return;
+            }
+
+            const now = new Date();
+            const dateStr = `${now.toLocaleDateString('vi-VN')} ${now.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}`;
+
+            const newTransaction = {
+                description,
+                amount,
+                type,
+                date: dateStr,
+                rawDate: todayStr
+            };
+
+            transactions.unshift(newTransaction);
+            updateApp();
+
+            descriptionInput.value = '';
+            amountInput.value = '';
+            typeInput.value = '';
+            document.querySelectorAll('.select-card').forEach(c => c.classList.remove('active'));
+            showCenterToast('Thêm giao dịch thành công!', 'success');
+        });
+
+        function removeTransaction(index) {
+            transactions.splice(index, 1);
+            updateApp();
+            showCenterToast('Đã xóa giao dịch', 'info');
+        }
+
+        function dailyClosing() {
+            let dayIncome = 0;
+            let dayExpense = 0;
+            let hasTransactionsToday = false;
+
+            transactions.forEach(t => {
+                if (t.rawDate === todayStr) {
+                    hasTransactionsToday = true;
+                    const amount = Number(t.amount);
+
+                    if (t.type === 'income') {
+                        dayIncome += amount;
+                    } else if (t.type === 'expense') {
+                        dayExpense += amount;
+                    }
+                }
+            });
+
+            if (!hasTransactionsToday) {
+                showCenterToast('Không có giao dịch hôm nay!', 'error');
+                return;
+            }
+
+            const nowObj = new Date();
+            const currentMonth = String(nowObj.getMonth() + 1).padStart(2, '0');
+            const currentYear = nowObj.getFullYear();
+            const currentMonthYearStr = `${currentMonth}/${currentYear}`;
+
+            const closingRecord = {
+                date: todayStr,
+                income: dayIncome,
+                expense: dayExpense,
+                closedAt: new Date().toLocaleTimeString('vi-VN')
+            };
+            closingHistory.unshift(closingRecord);
+
+            manualMonthClosings.push({
+                monthYear: currentMonthYearStr,
+                income: dayIncome,
+                expense: dayExpense
+            });
+
+            transactions = transactions.filter(t => t.rawDate !== todayStr);
+            updateApp();
+
+            showCenterToast('Chốt sổ thành công!', 'success');
+        }
+
+        if (currentUser) {
+            authScreen.style.display = 'none';
+            mainAppContainer.style.display = 'block';
+            loadUserData();
+            updateApp();
+        } else {
+            authScreen.style.display = 'flex';
+            mainAppContainer.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
